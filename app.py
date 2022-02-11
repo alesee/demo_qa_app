@@ -2,13 +2,16 @@ import torch
 import wikipedia
 import transformers
 import streamlit as st
+from tokenizers import Tokenizer
 from transformers import pipeline, Pipeline 
 
+
+@st.cache(hash_funcs={Tokenizer: lambda _: None}, allow_output_mutation=True)
 def load_qa_pipeline() -> Pipeline:
     qa_pipeline = pipeline("question-answering", model="distilbert-base-uncased-distilled-squad")
     return qa_pipeline
 
-
+@st.cache
 def load_wiki_summary(query: str) -> str:
     results = wikipedia.search(query)
     summary = wikipedia.summary(results[0], sentences=10)
